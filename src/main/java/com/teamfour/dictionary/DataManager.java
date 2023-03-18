@@ -16,7 +16,6 @@ public class DataManager {
     private HashMap<Integer, Word> ENG_GRE_DICT;
     private HashMap<Integer, Word> ENG_SWE_DICT;
 
-
     private ArrayList<HashMap<Integer, Word>> AllDictionaries;
 
     public DataManager() {

@@ -1,20 +1,14 @@
 package com.teamfour.dictionary;
 
-import io.github.palexdev.materialfx.controls.MFXListView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.FocusModel;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 
-import java.util.Random;
-
-public class WordCardGUI extends AnchorPane{
+public class WordCard extends AnchorPane{
 
     //private AnchorPane card;
     private ListView<AnchorPane> parent;
@@ -27,7 +21,7 @@ public class WordCardGUI extends AnchorPane{
     private ListView<String> synonymsListView;
 
 
-    public WordCardGUI(ListView<AnchorPane> parent) {
+    public WordCard(ListView<AnchorPane> parent) {
 
         this.parent = parent;
         this.setViewOrder(10);

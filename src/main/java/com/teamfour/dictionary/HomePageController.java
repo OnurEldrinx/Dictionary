@@ -72,7 +72,7 @@ public class HomePageController implements Initializable {
 
         for (int i=0;i<6;i++){
 
-            WordCardGUI card = new WordCardGUI(cardListView);
+            WordCard card = new WordCard(cardListView);
 
             if(dataManager.getAllDictionaries().get(i).containsKey(searchTarget.getHashCode())){
 
