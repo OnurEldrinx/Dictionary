@@ -1,8 +1,10 @@
 package com.teamfour.dictionary;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class DataManager {
@@ -15,13 +17,13 @@ public class DataManager {
     private HashMap<Integer, Word> ENG_SWE_DICT;
 
 
-    private ArrayList<HashMap<Integer, Word>> ALL_DICTS;
+    private ArrayList<HashMap<Integer, Word>> AllDictionaries;
 
     public DataManager() {
 
+        AllDictionaries = new ArrayList<>();
 
-        ALL_DICTS = new ArrayList<>();
-
+        //From English to All
         ENG_TUR_DICT = new HashMap<>();
         ENG_FRA_DICT = new HashMap<>();
         ENG_GER_DICT = new HashMap<>();
@@ -29,78 +31,75 @@ public class DataManager {
         ENG_GRE_DICT = new HashMap<>();
         ENG_SWE_DICT = new HashMap<>();
 
-        LoadDictionaries();
+        LoadEnglishDictionaries();
 
-        ALL_DICTS.add(ENG_TUR_DICT);
-        ALL_DICTS.add(ENG_FRA_DICT);
-        ALL_DICTS.add(ENG_GER_DICT);
-        ALL_DICTS.add(ENG_ITA_DICT);
-        ALL_DICTS.add(ENG_GRE_DICT);
-        ALL_DICTS.add(ENG_SWE_DICT);
+        AllDictionaries.add(ENG_TUR_DICT);
+        AllDictionaries.add(ENG_FRA_DICT);
+        AllDictionaries.add(ENG_GER_DICT);
+        AllDictionaries.add(ENG_ITA_DICT);
+        AllDictionaries.add(ENG_GRE_DICT);
+        AllDictionaries.add(ENG_SWE_DICT);
 
     }
 
-    public void LoadDictionaries(){
+
+
+    public void LoadEnglishDictionaries(){
 
         //parsing
+        List<String> eng_tur_eng;
+        List<String> eng_tur_tur;
 
-        try {
-            List<String> eng_tur_eng = Files.readAllLines(Paths.get(Config.ENG_TUR_ENG_TXT));
-            List<String> eng_tur_tur = Files.readAllLines(Paths.get(Config.ENG_TUR_TUR_TXT));
+        eng_tur_eng = BufferedReaderToList(Config.ENG_TUR_ENG_TXT);
+        eng_tur_tur = BufferedReaderToList(Config.ENG_TUR_TUR_TXT);
 
-            for (int i=0;i<eng_tur_eng.size();i++){
+        for (int i=0;i<eng_tur_eng.size();i++){
 
-                Word eng = new Word(Config.Languages.ENGLISH,eng_tur_eng.get(i).trim().toLowerCase());
-                Word tur = new Word(Config.Languages.TURKISH,eng_tur_tur.get(i).trim().toLowerCase());
+            Word eng = new Word(Config.Languages.ENGLISH,eng_tur_eng.get(i).trim().toLowerCase());
+            Word tur = new Word(Config.Languages.TURKISH,eng_tur_tur.get(i).trim().toLowerCase());
+            Word fra = new Word(Config.Languages.FRENCH,eng_tur_tur.get(i).trim().toLowerCase());
+            Word ger = new Word(Config.Languages.GERMAN,eng_tur_tur.get(i).trim().toLowerCase());
+            Word ita = new Word(Config.Languages.ITALIAN,eng_tur_tur.get(i).trim().toLowerCase());
+            Word gre = new Word(Config.Languages.GREEK,eng_tur_tur.get(i).trim().toLowerCase());
+            Word swe = new Word(Config.Languages.SWEDISH,eng_tur_tur.get(i).trim().toLowerCase());
 
-                ENG_TUR_DICT.put(eng.getHashCode(), tur);
-                //System.out.println(eng_tur_eng.get(i) + " - " + eng_tur_tur.get(i));
+            String[] a = tur.getWord().split(";");
 
-            }
+            tur.setTranslations(a);
+            fra.setTranslations(a);
+            ger.setTranslations(a);
+            ita.setTranslations(a);
+            gre.setTranslations(a);
+            swe.setTranslations(a);
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            ENG_TUR_DICT.put(eng.getHashCode(), tur);
+            ENG_FRA_DICT.put(eng.getHashCode(), fra);
+            ENG_GER_DICT.put(eng.getHashCode(), ger);
+            ENG_ITA_DICT.put(eng.getHashCode(), ita);
+            ENG_GRE_DICT.put(eng.getHashCode(), gre);
+            ENG_SWE_DICT.put(eng.getHashCode(), swe);
         }
 
 
-        /*Word wEng = new Word(Config.Languages.ENGLISH,"Life");
+    }
 
-        Word wTur = new Word(Config.Languages.TURKISH,"Hayat");
+    private static List<String> BufferedReaderToList(String path) {
 
-        Word wFra = new Word(Config.Languages.FRENCH,"Vie");
+        List<String> list = new ArrayList<>();
 
-        Word wGer = new Word(Config.Languages.GERMAN,"Leben");
-
-        Word wSwe = new Word(Config.Languages.SWEDISH,"Liv");
-
-        Word wIta = new Word(Config.Languages.ITALIAN,"Vita");
-
-        Word wGre = new Word(Config.Languages.GREEK,"ΖΩΗ");*/
-
-        /*wEng.getTranslationData().put(wTur.getLanguage(),wTur);
-        wEng.getTranslationData().put(wFra.getLanguage(),wFra);
-        wEng.getTranslationData().put(wGer.getLanguage(),wGer);
-        wEng.getTranslationData().put(wSwe.getLanguage(),wSwe);
-        wEng.getTranslationData().put(wIta.getLanguage(),wIta);
-        wEng.getTranslationData().put(wGre.getLanguage(),wGre);*/
-
-        /*wEng.getTranslationData()[0][0] = wTur;
-        wEng.getTranslationData()[1][0] = wFra;
-        wEng.getTranslationData()[2][0] = wGer;
-        wEng.getTranslationData()[3][0] = wSwe;
-        wEng.getTranslationData()[4][0] = wIta;
-        wEng.getTranslationData()[5][0] = wGre;
-
-
-        ENG_TUR_DICT.put(wEng.getHashCode(),wTur);
-        ENG_SWE_DICT.put(wEng.getHashCode(),wSwe);
-        ENG_FRA_DICT.put(wEng.getHashCode(),wFra);
-        ENG_GRE_DICT.put(wEng.getHashCode(),wGre);
-        ENG_GER_DICT.put(wEng.getHashCode(),wGer);
-        ENG_ITA_DICT.put(wEng.getHashCode(),wIta);*/
-
-
+        try {
+            final BufferedReader in = new BufferedReader(
+                    new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8));
+            String line;
+            while ((line = in.readLine()) != null) {
+                list.add(line);
+            }
+            in.close();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 
@@ -152,12 +151,12 @@ public class DataManager {
         this.ENG_SWE_DICT = ENG_SWE_DICT;
     }
 
-    public ArrayList<HashMap<Integer, Word>> getALL_DICTS() {
-        return ALL_DICTS;
+    public ArrayList<HashMap<Integer, Word>> getAllDictionaries() {
+        return AllDictionaries;
     }
 
-    public void setALL_DICTS(ArrayList<HashMap<Integer, Word>> ALL_DICTS) {
-        this.ALL_DICTS = ALL_DICTS;
+    public void setAllDictionaries(ArrayList<HashMap<Integer, Word>> allDictionaries) {
+        this.AllDictionaries = allDictionaries;
     }
 
 }

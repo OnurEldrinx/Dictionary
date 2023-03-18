@@ -1,21 +1,20 @@
 package com.teamfour.dictionary;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class Word {
 
     private Config.Languages language; // which contains this word
     private String word;
-    private String definition;
+    private String[] translations; // to other languages
     private String type; // pronoun,noun,verb etc.
-    private String synonyms;
+    private ArrayList<String> synonyms; // if exist
     private String flagImgPath;
     private int hashCode;
-    private Object[][] translationData; // translation of this word object into other 6 languages
 
+    public Word(Config.Languages language,String word) {
 
-    public Word(Config.Languages countryName,String word) {
-        this.language = countryName;
+        this.language = language;
         this.word = word;
 
         if (this.word != null) {
@@ -34,7 +33,6 @@ public class Word {
 
         }
 
-        translationData = new Object[6][1];
     }
 
     public Config.Languages getLanguage() {
@@ -53,12 +51,20 @@ public class Word {
         this.word = word;
     }
 
-    public String getDefinition() {
-        return definition;
+    public String[] getTranslations() {
+        return translations;
     }
 
-    public void setDefinition(String definition) {
-        this.definition = definition;
+    public void setTranslations(String[] translations) {
+        this.translations = translations;
+    }
+
+    public ArrayList<String> getSynonyms() {
+        return synonyms;
+    }
+
+    public void setSynonyms(ArrayList<String> synonyms) {
+        this.synonyms = synonyms;
     }
 
     public String getType() {
@@ -67,14 +73,6 @@ public class Word {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getSynonyms() {
-        return synonyms;
-    }
-
-    public void setSynonyms(String synonyms) {
-        this.synonyms = synonyms;
     }
 
     public String getFlagImgPath() {
@@ -90,14 +88,6 @@ public class Word {
         return language.toString();
     }
 
-
-    public Object[][] getTranslationData() {
-        return translationData;
-    }
-
-    public void setTranslationData(Object[][] translationData) {
-        this.translationData = translationData;
-    }
 
     public int getHashCode() {
         return hashCode;

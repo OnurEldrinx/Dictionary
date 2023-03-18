@@ -6,196 +6,112 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import javafx.scene.layout.*;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-import java.util.ArrayList;
-
-public class HomePageController {
+public class HomePageController implements Initializable {
     @FXML
     protected MFXComboBox<Word> sourceLangComboBox;
     @FXML
     protected MFXButton searchButton;
     @FXML
     protected MFXTextField searchInput;
-    @FXML
-    protected ImageView flag1;
-    @FXML
-    protected ImageView flag2;
-    @FXML
-    protected ImageView flag3;
-    @FXML
-    protected ImageView flag4;
-    @FXML
-    protected ImageView flag5;
-    @FXML
-    protected ImageView flag6;
 
     @FXML
-    protected AnchorPane alphaCard; // 00 01 02 10 11 12
+    private ObservableList<Word> languageCards;
 
     @FXML
-    protected GridPane cardGrid;
+    protected ListView<AnchorPane> cardListView;
 
-    @FXML
-    protected Text word1;
 
-    @FXML
-    protected Text wordType1;
-
-    @FXML
-    protected Text definition1;
-
-    @FXML
-    protected Text synonyms1;
-
-    @FXML
-    protected Text word2;
-
-    @FXML
-    protected Text wordType2;
-
-    @FXML
-    protected Text definition2;
-
-    @FXML
-    protected Text synonyms2;
-
-    @FXML
-    protected Text word3;
-
-    @FXML
-    protected Text wordType3;
-
-    @FXML
-    protected Text definition3;
-
-    @FXML
-    protected Text synonyms3;
-
-    @FXML
-    protected Text word4;
-
-    @FXML
-    protected Text wordType4;
-
-    @FXML
-    protected Text definition4;
-
-    @FXML
-    protected Text synonyms4;
-
-    @FXML
-    protected Text word5;
-
-    @FXML
-    protected Text wordType5;
-
-    @FXML
-    protected Text definition5;
-
-    @FXML
-    protected Text synonyms5;
-
-    @FXML
-    protected Text word6;
-
-    @FXML
-    protected Text wordType6;
-
-    @FXML
-    protected Text definition6;
-
-    @FXML
-    protected Text synonyms6;
-
-    public void SearchButtonAction(ObservableList<Word> cards, DataManager dataManager){
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
 
 
 
-        ArrayList<ImageView> imageViews= new ArrayList<>();
-        imageViews.add(flag1);
-        imageViews.add(flag2);
-        imageViews.add(flag3);
-        imageViews.add(flag4);
-        imageViews.add(flag5);
-        imageViews.add(flag6);
+        Word tr = new Word(Config.Languages.TURKISH,"Turkish");
+        Word fra = new Word(Config.Languages.FRENCH,"French");
+        Word eng = new Word(Config.Languages.ENGLISH,"English");
+        Word swe = new Word(Config.Languages.SWEDISH,"Swedish");
+        Word gre = new Word(Config.Languages.GREEK,"Greek");
+        Word ita = new Word(Config.Languages.ITALIAN,"Italian");
+        Word deu = new Word(Config.Languages.GERMAN,"German");
 
-        ArrayList<Text> texts = new ArrayList<>();
-        texts.add(word1);
-        texts.add(word2);
-        texts.add(word3);
-        texts.add(word4);
-        texts.add(word5);
-        texts.add(word6);
+        languageCards = FXCollections.observableArrayList(tr,fra,eng,swe,gre,ita,deu);
+        sourceLangComboBox.setItems(languageCards);
+
+        cardListView.setStyle("-fx-control-inner-background: #2b2d42; -fx-background-insets: 0;-fx-padding: 0; -fx-cell-size: 10");
+        cardListView.setOrientation(Orientation.VERTICAL);
+
+
+    }
+
+
+    public void HandleSearchButtonAction(DataManager dataManager){
+
+
+        cardListView.getItems().clear();
 
         if(sourceLangComboBox.getValue() == null){
-
             sourceLangComboBox.selectIndex(0);
-
         }
+
         Word sourceLang = sourceLangComboBox.getValue();
 
         ObservableList<Word> temp = FXCollections.observableArrayList();
-        temp.addAll(cards);
+        temp.addAll(languageCards);
 
         temp.remove(sourceLang);
 
+        Word searchTarget = new Word(sourceLang.getLanguage(),searchInput.getText().trim().toLowerCase());
 
+        for (int i=0;i<6;i++){
 
-        Word searchTarget = new Word(sourceLang.getLanguage(),searchInput.getText().trim());
-        System.out.println(searchTarget.getWord());
+            WordCardGUI card = new WordCardGUI(cardListView);
 
+            if(dataManager.getAllDictionaries().get(i).containsKey(searchTarget.getHashCode())){
 
+                Word w = dataManager.getAllDictionaries().get(i).get(searchTarget.getHashCode());
 
-        long start = System.nanoTime();
+                card.getDefinitionsListView().getItems().addAll(w.getTranslations());
+                card.getFlagImage().setImage(new Image(w.getFlagImgPath()));
 
-        for (int i = 0; i < imageViews.size(); i++){
+            }
 
-            Word w = dataManager.getALL_DICTS().get(i).get(searchTarget.getHashCode());
-            if(w != null){
+            cardListView.getItems().add(card);
+            if(i<5){
 
-                texts.get(i).setText(w.getWord());
-                texts.get(i).setFont(Font.font(10));
-                imageViews.get(i).setImage(new Image(w.getFlagImgPath()));
-
+                AnchorPane separator = new AnchorPane();
+                separator.setPrefSize(Region.USE_COMPUTED_SIZE,20);
+                separator.setStyle("-fx-background-color:  #ef233c");
+                cardListView.getItems().add(separator);
             }
 
         }
-
-        /*switch (sourceLang.getLanguage()){
-
-            case ENGLISH -> {
-
-
-
-            }
-
-            case TURKISH -> {
-
-
-
-
-            }
-
-        }*/
-
-        long end = System.nanoTime() - start;
-
-        System.out.println(end);
-
-
-
 
         sourceLangComboBox.clearSelection();
         sourceLangComboBox.selectItem(sourceLang);
 
-
     }
+
+    /*private Word SearchInEnglish(){ }
+
+    private Word SearchInTurkish(){ }
+
+    private Word SearchInFrench(){ }
+
+    private Word SearchInGerman(){ }
+
+    private Word SearchInItalian(){ }
+
+    private Word SearchInGreek(){ }
+
+    private Word SearchInSwedish(){ }*/
 
 
 

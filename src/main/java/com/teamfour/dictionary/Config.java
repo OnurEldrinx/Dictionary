@@ -1,5 +1,7 @@
 package com.teamfour.dictionary;
 
+import javafx.scene.paint.Color;
+
 public class Config {
 
     public static final String englandFlagImg = "com/teamfour/dictionary/images/england.png";
@@ -24,5 +26,7 @@ public class Config {
         TURKISH
 
     }
+
+    public static final Color background = Color.web( "#2b2d42");
 
 }
